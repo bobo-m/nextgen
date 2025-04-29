@@ -4,14 +4,10 @@ import { Like, LikeSchema } from 'src/schemas/like.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
+    MongooseModule.forFeature([
       {
         name: Like.name,
-        useFactory: () => {
-          const schema = LikeSchema;
-          schema.set('autoCreate', true);
-          return schema;
-        },
+        schema: LikeSchema,
       },
     ]),
   ],

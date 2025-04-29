@@ -4,14 +4,10 @@ import { Blog, BlogSchema } from 'src/schemas/blog.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
+    MongooseModule.forFeature([
       {
         name: Blog.name,
-        useFactory: () => {
-          const schema = BlogSchema;
-          schema.set('autoCreate', true);
-          return schema;
-        },
+        schema: BlogSchema,
       },
     ]),
   ],

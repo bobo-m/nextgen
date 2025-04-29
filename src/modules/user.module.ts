@@ -4,14 +4,10 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
+    MongooseModule.forFeature([
       {
         name: User.name,
-        useFactory: () => {
-          const schema = UserSchema;
-          schema.set('autoCreate', true);
-          return schema;
-        },
+        schema: UserSchema,
       },
     ]),
   ],

@@ -4,14 +4,10 @@ import { Comment, CommentSchema } from 'src/schemas/comment.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
+    MongooseModule.forFeature([
       {
         name: Comment.name,
-        useFactory: () => {
-          const schema = CommentSchema;
-          schema.set('autoCreate', true);
-          return schema;
-        },
+        schema: CommentSchema,
       },
     ]),
   ],

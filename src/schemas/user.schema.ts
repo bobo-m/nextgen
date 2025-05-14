@@ -24,6 +24,12 @@ export class User extends BaseSchema {
 
   @Prop({ type: String, enum: ['student', 'admin'], default: 'student' })
   role: 'student' | 'admin';
+
+  @Prop({ type: String, default: '' })
+  refresh_token: string;
+
+  @Prop({ type: [String], default: [] })
+  skills: string[];
 }
 
 export type UserDocument = HydratedDocument<User>;

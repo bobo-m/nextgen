@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   IUserRepository,
   IUserRepositoryToken,
@@ -8,10 +13,14 @@ import { User } from 'src/schemas/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoginResponseDto } from 'src/dtos/login.dto';
+import { SignupRequestDto } from 'src/dtos/auth.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectMapper() private readonly mapper: Mapper,
     @Inject(IUserRepositoryToken)
     private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
@@ -23,7 +32,23 @@ export class AuthService {
     if (user && user.password) {
       return user;
     }
-    return null;
+    throw new BadRequestException('Invalid credentials');
+  }
+
+  async register(
+    signupRequestDto: SignupRequestDto,
+  ): Promise<{ access_token: string; refresh_token: string }> {
+    const exists = await this.userRepository.findOne({
+      email: signupRequestDto.email,
+    });
+
+    if (exists) {
+      throw new BadRequestException('User with the email already exists');
+    }
+
+    const entity = this.mapper.map(signupRequestDto, SignupRequestDto, User);
+    const newUser = await this.userRepository.createEntity(entity);
+    return this.generateTokens(newUser);
   }
 
   async generateTokens(

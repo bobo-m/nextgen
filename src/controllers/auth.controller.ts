@@ -7,19 +7,40 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from 'src/decorators/auth.decorator';
 import {
   LoginRequestDto,
   LoginResponseDto,
   RefreshTokenDto,
 } from 'src/dtos/login.dto';
+import { SignupRequestDto } from 'src/dtos/auth.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { AuthService } from 'src/services/auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Public()
+  @ApiOperation({ summary: 'Register a new user account' })
+  @ApiBody({
+    description: 'User details for account creation',
+    type: SignupRequestDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'User successfully registered',
+    type: SignupRequestDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input or email already in use',
+  })
+  @Post('register')
+  async register(@Body() signupRequestDto: SignupRequestDto) {
+    return this.authService.register(signupRequestDto);
+  }
 
   @Public()
   @ApiOperation({ summary: 'User login and JWT token generation' })
@@ -32,14 +53,12 @@ export class AuthController {
       loginRequestDto.email,
       loginRequestDto.password,
     );
-    if (!user) {
-      throw new UnauthorizedException('Invalid Credentials');
-    }
 
     return this.authService.login(user);
   }
 
   // Refresh Token: Get a new access token using refresh token
+  @Public()
   @ApiOperation({ summary: 'Refresh access token using a valid refresh token' })
   @ApiResponse({
     status: 200,

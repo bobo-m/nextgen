@@ -4,7 +4,6 @@ import { IBlogRepositoryToken } from 'src/abstract/repositories/blog.repository.
 import { BlogController } from 'src/controllers/blog.controller';
 import { Blog, BlogSchema } from 'src/schemas/blog.schema';
 import { BlogRepository } from 'src/services/repositories/blog.repository';
-import { SavedBlogModule } from './saved-blog.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { SavedBlogModule } from './saved-blog.module';
         schema: BlogSchema,
       },
     ]),
-    SavedBlogModule,
   ],
   providers: [
     {
@@ -23,5 +21,6 @@ import { SavedBlogModule } from './saved-blog.module';
     },
   ],
   controllers: [BlogController],
+  exports: [IBlogRepositoryToken],
 })
 export class BlogModule {}

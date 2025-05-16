@@ -33,7 +33,7 @@ export class UserController {
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
-  @Get()
+  @Get('me')
   @ApiOperation({ summary: 'Get logged-in user details' })
   @ApiResponse({
     status: 200,
@@ -55,7 +55,7 @@ export class UserController {
     return this.mapper.map(user, User, UserResponseDto);
   }
 
-  @Patch()
+  @Patch('me')
   @ApiOperation({ summary: 'Update logged-in user profile' })
   @ApiResponse({
     status: 200,

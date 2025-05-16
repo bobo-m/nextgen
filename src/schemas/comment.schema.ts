@@ -7,12 +7,12 @@ import { Blog } from './blog.schema';
 @Schema({ collection: 'comments', timestamps: { createdAt: 'created_at' } })
 export class Comment extends BaseSchema {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User', required: true })
-  user: Types.ObjectId | User;
+  user_id: Types.ObjectId | User;
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Blog', required: true })
-  blog: Types.ObjectId | Blog;
+  blog_id: Types.ObjectId | Blog;
 
-  @Prop({ type: String })
+  @Prop({ type: String, required: true })
   content: string;
 }
 

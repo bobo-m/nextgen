@@ -1,5 +1,5 @@
 import { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
-import { IBaseRepository } from 'src/abstract/repositories/base.repositories.interface';
+import { IBaseRepository } from 'src/abstract/repositories/base.repository.interface';
 
 export class BaseRepository<T> implements IBaseRepository<T> {
   constructor(protected readonly model: Model<T>) {}

@@ -45,8 +45,11 @@ export class AuthService {
     if (exists) {
       throw new BadRequestException('User with the email already exists');
     }
-
+    const hashedPassword = await bcrypt.hash(signupRequestDto.password, 12);
     const entity = this.mapper.map(signupRequestDto, SignupRequestDto, User);
+
+    entity.password = hashedPassword;
+
     const newUser = await this.userRepository.createEntity(entity);
     return this.generateTokens(newUser);
   }
